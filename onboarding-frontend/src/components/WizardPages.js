@@ -57,7 +57,7 @@ const WizardPages = () => {
     console.log("userData", userData);
     try {
       // Post user data to your backend (e.g., MongoDB)
-      await axios.post('http://localhost:5000/user', userData);
+      await axios.post('https://zealthy-db248ad65a1c.herokuapp.com/user', userData);
       alert('User data submitted successfully!');
       navigate('/data'); // Redirect to data page after submission
     } catch (error) {
