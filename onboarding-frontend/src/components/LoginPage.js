@@ -18,7 +18,7 @@ const LoginPage = () => {
   };
 
   const handleRegister=()=>{
-    navigate('/page1');
+    navigate('/page/1');
   }
 
   return (

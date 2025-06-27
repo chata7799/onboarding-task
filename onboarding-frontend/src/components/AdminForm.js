@@ -4,7 +4,13 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const AdminForm = () => {
   const { config, setConfig } = useContext(AdminContext); // Access the admin config context
-  const [localConfig, setLocalConfig] = useState({ ...config });
+
+  // Initialize localConfig with a fallback to empty arrays for pages
+  const [localConfig, setLocalConfig] = useState({
+    page1: config?.page1 || [],
+    page2: config?.page2 || [],
+    page3: config?.page3 || [],
+  });
 
   const navigate = useNavigate();
 
@@ -24,50 +30,46 @@ const AdminForm = () => {
     });
   };
 
+  // Handle form submission
   const handleSubmit = () => {
-    console.log("localConfig",localConfig)
+    console.log("localConfig", localConfig);
     setConfig(localConfig); // Update the global config with the changes made by admin
-    navigate("/page1")
+    navigate("/page/1");  // Use the dynamic route format for page navigation
     alert('Admin configuration updated!');
+  };
 
+  const renderCheckboxes = (page) => {
+    const components = {
+      page1: ['email', 'password', 'firstName', 'lastName'],
+    page2: ['address', 'birthdate'], 
+    page3: ['aboutMe']
+    };
+
+    return components[page]?.map(component => (
+      <label key={component}>
+        <input
+          type="checkbox"
+          checked={localConfig[page]?.includes(component)}
+          onChange={() => handleChange(page, component)}
+        />
+        {component.charAt(0).toUpperCase() + component.slice(1)}
+      </label>
+    ));
   };
 
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Admin Configuration</h2>
       <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} style={styles.form}>
-        <h3>Page 2 Configuration</h3>
-        <div style={styles.checkboxGroup}>
-          <label>
-            <input
-              type="checkbox"
-              checked={localConfig.page2.includes('address')}
-              onChange={() => handleChange('page2', 'address')}
-            />
-            Address
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              checked={localConfig.page2.includes('birthdate')}
-              onChange={() => handleChange('page2', 'birthdate')}
-            />
-            Birthdate
-          </label>
-        </div>
-
-        <h3>Page 3 Configuration</h3>
-        <div style={styles.checkboxGroup}>
-          <label>
-            <input
-              type="checkbox"
-              checked={localConfig.page3.includes('aboutMe')}
-              onChange={() => handleChange('page3', 'aboutMe')}
-            />
-            About Me
-          </label>
-        </div>
-
+        {/* Check if config is defined before trying to render */}
+        {Object.keys(localConfig).length > 0 && Object.keys(localConfig).map((page, index) => (
+          <div key={index}>
+            <h3>{page.charAt(0).toUpperCase() + page.slice(1)} Configuration</h3>
+            <div style={styles.checkboxGroup}>
+              {renderCheckboxes(page)}
+            </div>
+          </div>
+        ))}
         <button type="submit" style={styles.button}>Save Configuration</button>
       </form>
     </div>
@@ -107,7 +109,6 @@ const styles = {
     fontSize: '16px',
     cursor: 'pointer',
   },
-  
 };
 
 export default AdminForm;

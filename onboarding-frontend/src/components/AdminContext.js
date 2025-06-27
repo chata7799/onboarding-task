@@ -5,8 +5,9 @@ export const AdminContext = createContext();
 export const AdminProvider = ({ children }) => {
   // Default configuration for page 2 and page 3
   const [config, setConfig] = useState({
-    page2: ['address', 'birthdate'], // Initial default configuration for page 2
-    page3: ['aboutMe'], // Initial default configuration for page 3
+    page1: ['email', 'password', 'firstName', 'lastName'],
+    page2: ['address', 'birthdate'], 
+    page3: ['aboutMe'],
   });
 
   return (
